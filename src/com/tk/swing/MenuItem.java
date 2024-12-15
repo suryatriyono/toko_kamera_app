@@ -17,6 +17,7 @@ public class MenuItem extends javax.swing.JPanel {
      * @param selected the selected to set
      */
     private boolean selected;
+    private boolean over;
 
     public MenuItem(Model_Menu data) {
         initComponents();
@@ -37,6 +38,11 @@ public class MenuItem extends javax.swing.JPanel {
         this.selected = selected;
         repaint();
     }
+    
+    public void setOver(boolean over) {
+        this.over = over;
+        repaint();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -53,7 +59,7 @@ public class MenuItem extends javax.swing.JPanel {
         lbIcon.setForeground(new java.awt.Color(255, 255, 255));
         lbIcon.setMaximumSize(new java.awt.Dimension(100, 100));
 
-        lbName.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbName.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
         lbName.setForeground(new java.awt.Color(255, 255, 255));
         lbName.setText("Menu Name");
 
@@ -65,8 +71,8 @@ public class MenuItem extends javax.swing.JPanel {
                 .addGap(35, 35, 35)
                 .addComponent(lbIcon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(lbName)
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addComponent(lbName, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -77,10 +83,14 @@ public class MenuItem extends javax.swing.JPanel {
 
     @Override
     protected void paintComponent(Graphics grphcs) {
-        if (selected) {
+        if (selected || over) {
             Graphics2D g2 = (Graphics2D) grphcs;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(new Color(255, 255, 255, 80));
+            if (selected) {
+                g2.setColor(new Color(255, 255, 255, 80));
+            } else {
+                g2.setColor(new Color(255, 255, 255, 20));
+            }
             g2.fillRoundRect(10, 0, getWidth() + 20, getHeight(), 5, 5);
         }
         super.paintComponent(grphcs); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody

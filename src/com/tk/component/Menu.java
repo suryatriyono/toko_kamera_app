@@ -1,14 +1,17 @@
 package com.tk.component;
 
+import com.tk.event.EventMenuSelected;
 import com.tk.model.Model_Menu;
 import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 /**
@@ -17,26 +20,38 @@ import javax.swing.JFrame;
  */
 public class Menu extends javax.swing.JPanel {
 
-    /**
-     * Creates new form Menu
-     */
+    private EventMenuSelected event;
+
+    public void addEventMenuSelected(EventMenuSelected event) {
+        this.event = event;
+        listMenu1.addEventMenuSelected(event);
+    }
+    
     public Menu() {
         initComponents();
         setOpaque(false);
         listMenu1.setOpaque(false);
+        ImageIcon originIcon = (ImageIcon) jLabel1.getIcon();
+
+        Image img = originIcon.getImage();
+
+        Image scaledImg = img.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+
+        ImageIcon resizedIcon = new ImageIcon(scaledImg);
+
+        jLabel1.setIcon(resizedIcon);
+
         initMenu();
     }
 
     public void initMenu() {
-        listMenu1.addItem(new Model_Menu("1", "Dashboard", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("2", "UI Elements", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("3", "Comonents", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("5", "Date Table", Model_Menu.MenuType.MENU));
+        listMenu1.addItem(new Model_Menu("dashboard-bx", "Dashboard", Model_Menu.MenuType.MENU));
+        listMenu1.addItem(new Model_Menu("xing-bx", "UI Elements", Model_Menu.MenuType.MENU));
+        listMenu1.addItem(new Model_Menu("jquery-bx", "Sample Page", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
 
         listMenu1.addItem(new Model_Menu("", "Other ", Model_Menu.MenuType.TITLE));
-        listMenu1.addItem(new Model_Menu("7", "Sample Page", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("9", "More", Model_Menu.MenuType.MENU));
+        listMenu1.addItem(new Model_Menu("code-bx", "More", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
     }
 
@@ -51,10 +66,11 @@ public class Menu extends javax.swing.JPanel {
         panelMoving.setBackground(new java.awt.Color(255, 0, 51));
         panelMoving.setOpaque(false);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Poppins", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/tk/icon/logo.png"))); // NOI18N
-        jLabel1.setText("Toko Kamera");
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/tk/icon/mailchimp-bx.png"))); // NOI18N
+        jLabel1.setText("CAM STORE");
 
         javax.swing.GroupLayout panelMovingLayout = new javax.swing.GroupLayout(panelMoving);
         panelMoving.setLayout(panelMovingLayout);
@@ -89,7 +105,7 @@ public class Menu extends javax.swing.JPanel {
                 .addGap(15, 15, 15)
                 .addComponent(panelMoving, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(listMenu1, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
+                .addComponent(listMenu1, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
