@@ -1,7 +1,8 @@
 package com.tk.swing;
 
-import com.tk.model.Model_Menu;
+import com.tk.model.MenuModel;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font; 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -19,13 +20,15 @@ public class MenuItem extends javax.swing.JPanel {
     private boolean selected;
     private boolean over;
 
-    public MenuItem(Model_Menu data) {
+    public MenuItem(MenuModel data) {
         initComponents();
         setOpaque(false);
-        if (data.getType() == Model_Menu.MenuType.MENU) {
+        lbName.setPreferredSize(new Dimension(100, 500));
+        
+        if (data.getType() == MenuModel.MenuType.MENU) {
             lbIcon.setIcon(data.toIcon());
             lbName.setText(data.getName());
-        } else if (data.getType() == Model_Menu.MenuType.TITLE) {
+        } else if (data.getType() == MenuModel.MenuType.TITLE) {
             lbIcon.setText(data.getName());
             lbIcon.setFont(new Font("Poppins", 1, 12));
             lbName.setVisible(false);
@@ -71,8 +74,8 @@ public class MenuItem extends javax.swing.JPanel {
                 .addGap(35, 35, 35)
                 .addComponent(lbIcon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(lbName, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(lbName, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

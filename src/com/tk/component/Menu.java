@@ -1,8 +1,8 @@
 package com.tk.component;
 
 import com.tk.event.EventMenuSelected;
-import com.tk.model.Model_Menu;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -18,7 +18,7 @@ import javax.swing.JFrame;
  *
  * @author STNVC
  */
-public class Menu extends javax.swing.JPanel {
+public final class Menu extends javax.swing.JPanel {
 
     private EventMenuSelected event;
 
@@ -45,14 +45,14 @@ public class Menu extends javax.swing.JPanel {
     }
 
     public void initMenu() {
-        listMenu1.addItem(new Model_Menu("dashboard-bx", "Dashboard", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("xing-bx", "UI Elements", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("jquery-bx", "Sample Page", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
+        listMenu1.addItem(new com.tk.model.MenuModel("dashboard-bx", "Dashboard", com.tk.model.MenuModel.MenuType.MENU));
+        listMenu1.addItem(new com.tk.model.MenuModel("edit-bx", "Simpan Pembelian", com.tk.model.MenuModel.MenuType.MENU));
+        listMenu1.addItem(new com.tk.model.MenuModel("jquery-bx", "Sample Page", com.tk.model.MenuModel.MenuType.MENU));
+        listMenu1.addItem(new com.tk.model.MenuModel("", "", com.tk.model.MenuModel.MenuType.EMPTY));
 
-        listMenu1.addItem(new Model_Menu("", "Other ", Model_Menu.MenuType.TITLE));
-        listMenu1.addItem(new Model_Menu("code-bx", "More", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
+        listMenu1.addItem(new com.tk.model.MenuModel("", "Other ", com.tk.model.MenuModel.MenuType.TITLE));
+        listMenu1.addItem(new com.tk.model.MenuModel("code-bx", "More", com.tk.model.MenuModel.MenuType.MENU));
+        listMenu1.addItem(new com.tk.model.MenuModel("", "", com.tk.model.MenuModel.MenuType.EMPTY));
     }
 
     @SuppressWarnings("unchecked")
@@ -70,7 +70,7 @@ public class Menu extends javax.swing.JPanel {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/tk/icon/mailchimp-bx.png"))); // NOI18N
-        jLabel1.setText("CAM STORE");
+        jLabel1.setText("TOKO KAMERA");
 
         javax.swing.GroupLayout panelMovingLayout = new javax.swing.GroupLayout(panelMoving);
         panelMoving.setLayout(panelMovingLayout);

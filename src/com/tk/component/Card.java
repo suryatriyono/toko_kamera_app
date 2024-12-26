@@ -1,6 +1,5 @@
 package com.tk.component;
 
-import com.tk.model.Model_Card;
 import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -52,7 +51,7 @@ public class Card extends javax.swing.JPanel {
         color2 = Color.WHITE;
     }
 
-    public void setData(Model_Card data) {
+    public void setData(com.tk.model.CardModel data) {
         lbIcon.setIcon(data.getIcon());
         lbTitle.setText(data.getTitle());
         lbValues.setText(data.getValues());

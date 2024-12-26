@@ -1,6 +1,6 @@
 package com.tk.swing;
 
-import com.tk.model.Model_StatusType;
+import com.tk.model.StatusTypeModel;
 import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -14,7 +14,7 @@ import javax.swing.JLabel;
  */
 public class TableStatus extends JLabel {
 
-    public Model_StatusType getType() {
+    public StatusTypeModel getType() {
         return type;
     }
 
@@ -22,9 +22,9 @@ public class TableStatus extends JLabel {
         setForeground(Color.WHITE);
     }
 
-    private Model_StatusType type;
+    private StatusTypeModel type;
 
-    public void setType(Model_StatusType type) {
+    public void setType(StatusTypeModel type) {
         this.type = type;
         setText(type.toString());
         repaint();
@@ -36,9 +36,9 @@ public class TableStatus extends JLabel {
             GradientPaint g;
             Graphics2D g2 = (Graphics2D) grphcs;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            if (type == Model_StatusType.PENDING) {
+            if (type == StatusTypeModel.PENDING) {
                 g = new GradientPaint(0, 0, new Color(186, 123, 247), 0, getHeight(), new Color(167, 94, 236));
-            } else if (type == Model_StatusType.APPROVED) {
+            } else if (type == StatusTypeModel.APPROVED) {
                 g = new GradientPaint(0, 0, new Color(142, 142, 250), 0, getHeight(), new Color(123, 123, 245));
             } else {
                 g = new GradientPaint(0, 0, new Color(241, 208, 62), 0, getHeight(), new Color(211, 184, 61));

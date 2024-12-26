@@ -21,6 +21,8 @@ public class PanelBorder extends javax.swing.JPanel {
         initComponents();
         setOpaque(false);
     }
+    
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
