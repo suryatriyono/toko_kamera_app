@@ -6,7 +6,7 @@ import javax.swing.Icon;
  *
  * @author STNVC
  */
-public class Model_Card {
+public class CardModel {
 
     /**
      * @return the icon
@@ -64,7 +64,7 @@ public class Model_Card {
         this.description = description;
     }
 
-    public Model_Card(Icon icon, String title, String values, String description) {
+    public CardModel(Icon icon, String title, String values, String description) {
         this.icon = icon;
         this.title = title;
         this.values = values;
@@ -72,7 +72,7 @@ public class Model_Card {
     }
     
 
-    public Model_Card() {
+    public CardModel() {
     }
     
     private Icon icon;

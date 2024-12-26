@@ -11,7 +11,7 @@ import javax.swing.ImageIcon;
  *
  * @author STNVC
  */
-public class Model_Menu {
+public class MenuModel {
 
     /**
      * @return the icon
@@ -55,10 +55,10 @@ public class Model_Menu {
         this.type = type;
     }
 
-    public Model_Menu() {
+    public MenuModel() {
     }
 
-    public Model_Menu(String icon, String name, MenuType type) {
+    public MenuModel(String icon, String name, MenuType type) {
         this.icon = icon;
         this.name = name;
         this.type = type;

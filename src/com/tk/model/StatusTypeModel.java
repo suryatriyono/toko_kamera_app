@@ -8,6 +8,6 @@ package com.tk.model;
  *
  * @author STNVC
  */
-public enum Model_StatusType {
+public enum StatusTypeModel {
     PENDING, APPROVED, REJECT
 }

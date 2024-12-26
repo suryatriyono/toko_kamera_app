@@ -1,6 +1,6 @@
 package com.tk.swing;
 
-import com.tk.model.Model_StatusType;
+import com.tk.model.StatusTypeModel;
 
 /**
  *
@@ -11,7 +11,7 @@ public class CellStatus extends javax.swing.JPanel {
     /**
      * Creates new form CellStatus
      */
-    public CellStatus(Model_StatusType type) {
+    public CellStatus(StatusTypeModel type) {
         initComponents();
         status.setType(type);
     }
