@@ -25,7 +25,7 @@ public class Form_Dashboard extends javax.swing.JPanel {
         initComponents();
         setOpaque(false);
         card1.setData(new CardModel(new ImageIcon(getClass().getResource("/com/tk/icon/stock.png")),"Stock Total", "200000","Incrase by 60%"));
-        // add row
+        // add row 
         spTable.setVerticalScrollBar(new ScrollBar());
         spTable.getVerticalScrollBar().setBackground(Color.WHITE);
         spTable.getViewport().setBackground(Color.WHITE);

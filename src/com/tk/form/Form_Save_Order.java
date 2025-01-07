@@ -9,11 +9,16 @@ import com.tk.swing.ButtonRenderer;
 import com.tk.swing.ComboBoxSuggestion;
 import com.tk.swing.ScrollBar;
 import com.tk.swing.Table;
+import java.awt.BorderLayout;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
+import java.awt.Insets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -27,10 +32,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JOptionPane;
 
-import net.miginfocom.swing.MigLayout;
-
 import java.text.NumberFormat;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
@@ -55,34 +60,47 @@ public class Form_Save_Order extends javax.swing.JPanel {
     }
 
     private void initPanelBorder() {
-        pb.setLayout(new MigLayout("wrap", "push[center]push", "push[]25[]10[]10[]25[]push"));
-        pb.setPreferredSize(new Dimension(1048, 600));
+        setLayout(new BorderLayout());
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // 20px margin
+
+        pb.setLayout(new GridBagLayout());
+        pb.setBackground(Color.WHITE);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(10, 10, 10, 10); // Padding inside pb
 
         // Add title
-        JLabel title = new JLabel(" Save Order ");
+        JLabel title = new JLabel("Simpan Pembelian", SwingConstants.CENTER);
         title.setFont(new Font("Poppins", Font.BOLD, 24));
-        title.setForeground(new Color(153, 104, 252));
+        title.setForeground(Color.decode("#4A00E0"));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 0;
+        gbc.ipady = 40; // This will give it a height of 50
+        pb.add(title, gbc);
 
         // Add table
         initializeTable();
-
-        // Add jScrollpane
         JScrollPane sp = new JScrollPane(table);
-        sp.setPreferredSize(new Dimension(600, 250));
-        sp.getViewport().setBackground(Color.WHITE);
-        sp.setBorder(null);
         sp.setVerticalScrollBar(new ScrollBar());
+        sp.setBorder(null);
+        sp.setOpaque(false);
+        sp.getViewport().setOpaque(false);
+        gbc.gridy = 1;
+        gbc.weighty = 1.0; // This will make it fill the remaining space
+        gbc.ipady = 0; // Reset ipady
+        pb.add(sp, gbc);
 
-        // Custom corner
-        JPanel cornerPanel = new JPanel();
-        cornerPanel.setBackground(Color.RED);
-        sp.setCorner(JScrollPane.UPPER_RIGHT_CORNER, cornerPanel);
+        // Add input panel
+        JPanel inputPanel = createInputPanel();
+        gbc.gridy = 2;
+        gbc.weighty = 0;
+        gbc.ipady = 40; // This will give it a height of 50
+        pb.add(inputPanel, gbc);
 
-        // Add to main penel
-        pb.add(title);
-        pb.add(sp, "W 980!");
-        pb.add(createInputPanel(), "w 1000!");
-
+        // Add pb to this panel
+        add(pb, BorderLayout.CENTER);
     }
 
     private void initializeTable() {
@@ -91,6 +109,7 @@ public class Form_Save_Order extends javax.swing.JPanel {
         // Menyiapkan renderer dan editor untuk kolom aksi (yang berisi tombol)
         table.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
         table.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor());
+//        table.setOpaque(false);
 
     }
 
@@ -147,8 +166,8 @@ public class Form_Save_Order extends javax.swing.JPanel {
     }
 
     private JPanel createInputPanel() {
-        JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+//        inputPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
         inputPanel.setOpaque(false);
 
         JLabel namaBarang = new JLabel("Nama Barang ");
@@ -166,8 +185,8 @@ public class Form_Save_Order extends javax.swing.JPanel {
         txtJumlah = new JTextField();
         txtJumlah.setPreferredSize(new Dimension(100, 35));
 
-        JButton btnSimpan = new JButton("Simpan Order");
-        btnSimpan.setPreferredSize(new Dimension(125, 35));
+        JButton btnSimpan = new JButton("Simpan");
+        btnSimpan.setPreferredSize(new Dimension(80, 35));
         btnSimpan.addActionListener(e -> saveOrder());
 
         cbBarang.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
@@ -249,7 +268,7 @@ public class Form_Save_Order extends javax.swing.JPanel {
         for (DetailPembelianModel detail : detailPembelianList) {
 
             BarangModel barang = listBarang.stream()
-                    .filter(b -> b.getIdBarang().equals(detail.getIdBarang()))
+                    .filter(b -> b.getIdBarang()==(detail.getIdBarang()))
                     .findFirst()
                     .orElse(null);
             String namaBarang = barang != null ? barang.getNamaBarang() : "";
@@ -270,40 +289,40 @@ public class Form_Save_Order extends javax.swing.JPanel {
     }
 
     private void saveOrder() {
-        if (detailPembelianList.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Tidak ada detail pembelian untuk di simpain.", "Peringatan", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        ComboBoxSuggestion cbPemasok = new ComboBoxSuggestion();
-        List<PemasokModel> listPemasok = DatabaseControllers.getAllPemasok();
-
-        listPemasok.forEach(pemasok -> cbPemasok.addItem(pemasok.getNamaPemasok()));
-
-        int rsOption = JOptionPane.showConfirmDialog(this, cbPemasok, "Pilih Pemasok", JOptionPane.OK_CANCEL_OPTION);
-
-        if (rsOption == JOptionPane.OK_OPTION) {
-            String namaPemasok = (String) cbPemasok.getSelectedItem();
-            PemasokModel pemasok = listPemasok.stream()
-                    .filter(p -> p.getNamaPemasok().equals(namaPemasok))
-                    .findFirst()
-                    .orElse(null);
-            if (pemasok.getIdPemasok() != null) {
-                boolean success = DatabaseControllers.saveOrder(detailPembelianList, pemasok.getIdPemasok());
-
-                if (success) {
-                    JOptionPane.showMessageDialog(this, "Order berhasil disimpan!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    detailPembelianList.clear();
-                    refreshTable();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Gagal menyimpan", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Pemasok tidak di temukan", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-
+    if (detailPembelianList.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Tidak ada detail pembelian untuk disimpan.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+        return;
     }
+
+    ComboBoxSuggestion cbPemasok = new ComboBoxSuggestion();
+    List<PemasokModel> listPemasok = DatabaseControllers.getAllPemasok();
+
+    listPemasok.forEach(pemasok -> cbPemasok.addItem(pemasok.getNamaPemasok()));
+
+    int rsOption = JOptionPane.showConfirmDialog(this, cbPemasok, "Pilih Pemasok", JOptionPane.OK_CANCEL_OPTION);
+
+    if (rsOption == JOptionPane.OK_OPTION) {
+        String namaPemasok = (String) cbPemasok.getSelectedItem();
+        PemasokModel pemasok = listPemasok.stream()
+                .filter(p -> p.getNamaPemasok().equals(namaPemasok))
+                .findFirst()
+                .orElse(null);
+        
+        if (pemasok != null && pemasok.getIdPemasok() > 0) {
+            boolean success = DatabaseControllers.saveOrder(detailPembelianList, pemasok.getIdPemasok());
+
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Order berhasil disimpan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                detailPembelianList.clear();
+                refreshTable();
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal menyimpan order", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Pemasok tidak ditemukan atau ID tidak valid", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+}
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

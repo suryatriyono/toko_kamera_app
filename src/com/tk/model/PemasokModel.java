@@ -9,14 +9,14 @@ public class PemasokModel {
     /**
      * @return the idPemasok
      */
-    public String getIdPemasok() {
+    public int getIdPemasok() {
         return idPemasok;
     }
 
     /**
      * @param idPemasok the idPemasok to set
      */
-    public void setIdPemasok(String idPemasok) {
+    public void setIdPemasok(int idPemasok) {
         this.idPemasok = idPemasok;
     }
 
@@ -61,12 +61,12 @@ public class PemasokModel {
     public void setNoHp(String noHp) {
         this.noHp = noHp;
     }
-    private String idPemasok;
+    private int idPemasok;
     private String namaPemasok;
     private String alamat;
     private String noHp;
 
-    public PemasokModel(String idPemasok, String namaPemasok, String alamat, String noHp) {
+    public PemasokModel(int idPemasok, String namaPemasok, String alamat, String noHp) {
         this.idPemasok = idPemasok;
         this.namaPemasok = namaPemasok;
         this.alamat = alamat;

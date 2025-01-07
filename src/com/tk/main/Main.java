@@ -5,9 +5,6 @@
 package com.tk.main;
 
 import com.tk.event.EventMenuSelected;
-import com.tk.form.Form_1;
-import com.tk.form.Form_2;
-import com.tk.form.Form_3;
 import com.tk.form.Form_Dashboard;
 import com.tk.form.Form_Save_Order;
 import com.tk.swing.ScrollBar;
@@ -37,11 +34,7 @@ public class Main extends javax.swing.JFrame {
                     setForm(new Form_Dashboard());
                 } else if (index == 1) {
                     setForm(new Form_Save_Order());
-                } else if (index == 2) {
-                    setForm(new Form_2());
-                } else if (index == 3) {
-                    setForm(new Form_3());
-                }
+                } 
             }
         });
         setForm(new Form_Dashboard());

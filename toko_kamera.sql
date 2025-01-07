@@ -1,33 +1,33 @@
-CREATE TABLE kategori (
+CREATE TABLE IF NOT EXISTS kategori (
   id_kategori CHAR(3) NOT NULL PRIMARY KEY,
   kategori VARCHAR(15) NOT NULL
 );
 
-CREATE TABLE pemasok (
+CREATE TABLE IF NOT EXISTS pemasok (
     id_pemasok INT AUTO_INCREMENT PRIMARY KEY, 
     nama_pemasok VARCHAR(50) NOT NULL,
     alamat VARCHAR(100) DEFAULT NULL,
     no_hp VARCHAR(13) DEFAULT NULL
 );
 
-CREATE TABLE pelanggan (
+CREATE TABLE IF NOT EXISTS pelanggan (
   id_pelanggan INT AUTO_INCREMENT PRIMARY KEY,
   nama_pelanggan varchar(50) NOT NULL,
   alamat varchar(100) DEFAULT NULL,
   no_hp varchar(13) DEFAULT NULL
-)
+);
 
-CREATE TABLE barang (
+CREATE TABLE IF NOT EXISTS barang (
     id_barang INT AUTO_INCREMENT PRIMARY KEY,
     id_kategori CHAR(3),
     nama_barang VARCHAR(100) NOT NULL,
     deskripsi TEXT,
     harga DECIMAL(15,2) NOT NULL,
-    stok INT NOT NULL
+    stok INT NOT NULL,
     FOREIGN KEY (id_kategori) REFERENCES kategori (id_kategori)
 );
 
-CREATE TABLE pembelian (
+CREATE TABLE IF NOT EXISTS pembelian (
     id_pembelian INT AUTO_INCREMENT PRIMARY KEY,
     id_pemasok INT,
     tanggal DATE NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE pembelian (
     FOREIGN KEY (id_pemasok) REFERENCES pemasok(id_pemasok) 
 );
 
-CREATE TABLE detail_pembelian (
+CREATE TABLE IF NOT EXISTS detail_pembelian (
     id_dpembelian INT AUTO_INCREMENT PRIMARY KEY,
     id_pembelian INT,
     id_barang INT,
@@ -46,24 +46,24 @@ CREATE TABLE detail_pembelian (
     FOREIGN KEY (id_barang) REFERENCES barang(id_barang)
 );
 
-CREATE TABLE penjualan (
+CREATE TABLE IF NOT EXISTS penjualan (
   id_penjualan INT AUTO_INCREMENT PRIMARY KEY,
   id_pelanggan INT,
   tanggal DATE NOT NULL,
-  total_harga decimal(15,2) NOT NULL
+  total_harga decimal(15,2) NOT NULL,
   FOREIGN KEY (id_pelanggan) REFERENCES pelanggan(id_pelanggan)
-)
+);
 
 
-CREATE TABLE detail_penjualan (
+CREATE TABLE IF NOT EXISTS detail_penjualan (
   id_dpenjualan INT AUTO_INCREMENT PRIMARY KEY,
   id_penjualan INT,
   id_barang INT,
   harga DECIMAL(15,2) NOT NULL,
   jumlah INT NOT NULL,
-  subtotal DECIMAL(10,0) NOT NULL
-  FOREIGN KEY (id_penjualan) REFERENCES penjualan(id_penjualan),
-)
+  subtotal DECIMAL(10,0) NOT NULL,
+  FOREIGN KEY (id_penjualan) REFERENCES penjualan(id_penjualan)
+);
 
 
 
