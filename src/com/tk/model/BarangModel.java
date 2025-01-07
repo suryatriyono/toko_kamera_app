@@ -9,14 +9,14 @@ public class BarangModel {
     /**
      * @return the idBarang
      */
-    public String getIdBarang() {
+    public int getIdBarang() {
         return idBarang;
     }
 
     /**
      * @param idBarang the idBarang to set
      */
-    public void setIdBarang(String idBarang) {
+    public void setIdBarang(int idBarang) {
         this.idBarang = idBarang;
     }
 
@@ -90,14 +90,14 @@ public class BarangModel {
         this.stok = stok;
     }
 
-    private String idBarang;
+    private int idBarang;
     private String idKategori;
     private String namaBarang;
     private String deskripsi;
     private double harga;
     private int stok;
 
-    public BarangModel(String idBarang, String idKategori, String namaBarang, String deskripsi, double harga, int stok) {
+    public BarangModel(int idBarang, String idKategori, String namaBarang, String deskripsi, double harga, int stok) {
         this.idBarang = idBarang;
         this.idKategori = idKategori;
         this.namaBarang = namaBarang;

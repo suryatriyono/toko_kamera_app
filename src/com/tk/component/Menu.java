@@ -2,7 +2,6 @@ package com.tk.component;
 
 import com.tk.event.EventMenuSelected;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -26,7 +25,7 @@ public final class Menu extends javax.swing.JPanel {
         this.event = event;
         listMenu1.addEventMenuSelected(event);
     }
-    
+
     public Menu() {
         initComponents();
         setOpaque(false);
@@ -46,12 +45,16 @@ public final class Menu extends javax.swing.JPanel {
 
     public void initMenu() {
         listMenu1.addItem(new com.tk.model.MenuModel("dashboard-bx", "Dashboard", com.tk.model.MenuModel.MenuType.MENU));
-        listMenu1.addItem(new com.tk.model.MenuModel("edit-bx", "Simpan Pembelian", com.tk.model.MenuModel.MenuType.MENU));
-        listMenu1.addItem(new com.tk.model.MenuModel("jquery-bx", "Sample Page", com.tk.model.MenuModel.MenuType.MENU));
+        listMenu1.addItem(new com.tk.model.MenuModel("buyer", "Pelanggan", com.tk.model.MenuModel.MenuType.MENU));
+        listMenu1.addItem(new com.tk.model.MenuModel("supplier", "Pemasok", com.tk.model.MenuModel.MenuType.MENU));
+        listMenu1.addItem(new com.tk.model.MenuModel("products", "Barang", com.tk.model.MenuModel.MenuType.MENU));
+        listMenu1.addItem(new com.tk.model.MenuModel("separate", "Kategori", com.tk.model.MenuModel.MenuType.MENU));
+        listMenu1.addItem(new com.tk.model.MenuModel("cargo", "Pembelian", com.tk.model.MenuModel.MenuType.MENU));
+        listMenu1.addItem(new com.tk.model.MenuModel("cash-on-delivery", "Penjualan", com.tk.model.MenuModel.MenuType.MENU));
         listMenu1.addItem(new com.tk.model.MenuModel("", "", com.tk.model.MenuModel.MenuType.EMPTY));
 
-        listMenu1.addItem(new com.tk.model.MenuModel("", "Other ", com.tk.model.MenuModel.MenuType.TITLE));
-        listMenu1.addItem(new com.tk.model.MenuModel("code-bx", "More", com.tk.model.MenuModel.MenuType.MENU));
+        listMenu1.addItem(new com.tk.model.MenuModel("", "Lainya", com.tk.model.MenuModel.MenuType.TITLE));
+        listMenu1.addItem(new com.tk.model.MenuModel("report", "Laporan", com.tk.model.MenuModel.MenuType.MENU));
         listMenu1.addItem(new com.tk.model.MenuModel("", "", com.tk.model.MenuModel.MenuType.EMPTY));
     }
 
@@ -69,7 +72,7 @@ public final class Menu extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Poppins", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/tk/icon/mailchimp-bx.png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/tk/icon/supermaket.png"))); // NOI18N
         jLabel1.setText("TOKO KAMERA");
 
         javax.swing.GroupLayout panelMovingLayout = new javax.swing.GroupLayout(panelMoving);
@@ -102,21 +105,21 @@ public final class Menu extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addGap(0, 0, 0)
                 .addComponent(panelMoving, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(listMenu1, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE)
+                .addComponent(listMenu1, javax.swing.GroupLayout.DEFAULT_SIZE, 505, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     @Override
     protected void paintChildren(Graphics grphcs) {
-        GradientPaint g = new GradientPaint(0, 0, Color.decode("#8E2DE2"), 0, getHeight(), Color.decode("#4A00E0"));
+        GradientPaint g = new GradientPaint(0, 20, Color.decode("#000000"), 0, getHeight(), Color.decode("#4A00E0"));
         Graphics2D g2 = (Graphics2D) grphcs;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setPaint(g);
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 0, 0);
         g2.fillRect(getWidth() - 20, 0, getWidth(), getHeight());
         super.paintChildren(grphcs);
     }

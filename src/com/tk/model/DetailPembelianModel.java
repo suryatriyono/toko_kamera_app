@@ -9,42 +9,42 @@ public class DetailPembelianModel {
     /**
      * @return the idDetailPembelian
      */
-    public String getIdDetailPembelian() {
+    public int getIdDetailPembelian() {
         return idDetailPembelian;
     }
 
     /**
      * @param idDetailPembelian the idDetailPembelian to set
      */
-    public void setIdDetailPembelian(String idDetailPembelian) {
+    public void setIdDetailPembelian(int idDetailPembelian) {
         this.idDetailPembelian = idDetailPembelian;
     }
 
     /**
      * @return the idPembelian
      */
-    public String getIdPembelian() {
+    public int getIdPembelian() {
         return idPembelian;
     }
 
     /**
      * @param idPembelian the idPembelian to set
      */
-    public void setIdPembelian(String idPembelian) {
+    public void setIdPembelian(int idPembelian) {
         this.idPembelian = idPembelian;
     }
 
     /**
      * @return the idBarang
      */
-    public String getIdBarang() {
+    public int getIdBarang() {
         return idBarang;
     }
 
     /**
      * @param idBarang the idBarang to set
      */
-    public void setIdBarang(String idBarang) {
+    public void setIdBarang(int idBarang) {
         this.idBarang = idBarang;
     }
 
@@ -92,21 +92,21 @@ public class DetailPembelianModel {
         this.subtotal = subtotal;
     }
 
-    private String idDetailPembelian;
-    private String idPembelian;
-    private String idBarang;
+    private int idDetailPembelian;
+    private int idPembelian;
+    private int  idBarang;
     private double harga;
     private int jumlah;
     private double subtotal;
     
-    public DetailPembelianModel(String idBarang, double harga, int jumlah) {
+    public DetailPembelianModel(int idBarang, double harga, int jumlah) {
         this.idBarang = idBarang;
         this.harga = harga;
         this.jumlah = jumlah;
         this.subtotal = harga * jumlah;
     }
 
-    public DetailPembelianModel(String idDetailPembelian, String idPembelian, String idBarang, double harga, int jumlah, double subtotal) {
+    public DetailPembelianModel(int idDetailPembelian, int idPembelian, int idBarang, double harga, int jumlah, double subtotal) {
         this.idDetailPembelian = idDetailPembelian;
         this.idPembelian = idPembelian;
         this.idBarang = idBarang;
