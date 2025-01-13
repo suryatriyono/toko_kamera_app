@@ -109,7 +109,6 @@ public class Form_Save_Order extends javax.swing.JPanel {
         // Menyiapkan renderer dan editor untuk kolom aksi (yang berisi tombol)
         table.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
         table.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor());
-//        table.setOpaque(false);
 
     }
 
@@ -147,9 +146,9 @@ public class Form_Save_Order extends javax.swing.JPanel {
                     table.addRow(new Object[]{
                         detail.getIdBarang(),
                         barang.getNamaBarang(),
-                        formatRupiah.format((double) detail.getHarga()),
+                        formatRupiah.format( detail.getHarga()),
                         detail.getJumlah(),
-                        formatRupiah.format((double) detail.getSubtotal()),
+                        formatRupiah.format(detail.getSubtotal()),
                         createButtonPanel(detail)
                     });
 
@@ -248,7 +247,7 @@ public class Form_Save_Order extends javax.swing.JPanel {
                 int newJumlah = Integer.parseInt(jumlahStr);
                 if (newJumlah > 0) {
                     detail.setJumlah(newJumlah);
-                    detail.setSubtotal(detail.getHarga() * newJumlah);
+                    detail.setSubtotal(detail.getSubtotal());
                     refreshTable();
                 } else {
                     JOptionPane.showMessageDialog(this, "Jumlah harus lebih dari 0", "Peringatan", JOptionPane.WARNING_MESSAGE);
@@ -268,7 +267,7 @@ public class Form_Save_Order extends javax.swing.JPanel {
         for (DetailPembelianModel detail : detailPembelianList) {
 
             BarangModel barang = listBarang.stream()
-                    .filter(b -> b.getIdBarang()==(detail.getIdBarang()))
+                    .filter(b -> b.getIdBarang() == (detail.getIdBarang()))
                     .findFirst()
                     .orElse(null);
             String namaBarang = barang != null ? barang.getNamaBarang() : "";
@@ -278,9 +277,9 @@ public class Form_Save_Order extends javax.swing.JPanel {
             table.addRow(new Object[]{
                 detail.getIdBarang(),
                 namaBarang,
-                formatRupiah.format((double) barang.getHarga()),
+                formatRupiah.format(barang.getHarga()),
                 detail.getJumlah(),
-                formatRupiah.format((double) detail.getSubtotal()),
+                formatRupiah.format(detail.getSubtotal()),
                 createButtonPanel(detail)
             });
 
@@ -289,40 +288,40 @@ public class Form_Save_Order extends javax.swing.JPanel {
     }
 
     private void saveOrder() {
-    if (detailPembelianList.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Tidak ada detail pembelian untuk disimpan.", "Peringatan", JOptionPane.WARNING_MESSAGE);
-        return;
-    }
+        if (detailPembelianList.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tidak ada detail pembelian untuk disimpan.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-    ComboBoxSuggestion cbPemasok = new ComboBoxSuggestion();
-    List<PemasokModel> listPemasok = DatabaseControllers.getAllPemasok();
+        ComboBoxSuggestion cbPemasok = new ComboBoxSuggestion();
+        List<PemasokModel> listPemasok = DatabaseControllers.getAllPemasok();
 
-    listPemasok.forEach(pemasok -> cbPemasok.addItem(pemasok.getNamaPemasok()));
+        listPemasok.forEach(pemasok -> cbPemasok.addItem(pemasok.getNamaPemasok()));
 
-    int rsOption = JOptionPane.showConfirmDialog(this, cbPemasok, "Pilih Pemasok", JOptionPane.OK_CANCEL_OPTION);
+        int rsOption = JOptionPane.showConfirmDialog(this, cbPemasok, "Pilih Pemasok", JOptionPane.OK_CANCEL_OPTION);
 
-    if (rsOption == JOptionPane.OK_OPTION) {
-        String namaPemasok = (String) cbPemasok.getSelectedItem();
-        PemasokModel pemasok = listPemasok.stream()
-                .filter(p -> p.getNamaPemasok().equals(namaPemasok))
-                .findFirst()
-                .orElse(null);
-        
-        if (pemasok != null && pemasok.getIdPemasok() > 0) {
-            boolean success = DatabaseControllers.saveOrder(detailPembelianList, pemasok.getIdPemasok());
+        if (rsOption == JOptionPane.OK_OPTION) {
+            String namaPemasok = (String) cbPemasok.getSelectedItem();
+            PemasokModel pemasok = listPemasok.stream()
+                    .filter(p -> p.getNamaPemasok().equals(namaPemasok))
+                    .findFirst()
+                    .orElse(null);
 
-            if (success) {
-                JOptionPane.showMessageDialog(this, "Order berhasil disimpan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                detailPembelianList.clear();
-                refreshTable();
+            if (pemasok != null && pemasok.getIdPemasok() > 0) {
+                boolean success = DatabaseControllers.saveOrder(detailPembelianList, pemasok.getIdPemasok());
+
+                if (success) {
+                    JOptionPane.showMessageDialog(this, "Order berhasil disimpan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                    detailPembelianList.clear();
+                    refreshTable();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Gagal menyimpan order", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             } else {
-                JOptionPane.showMessageDialog(this, "Gagal menyimpan order", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Pemasok tidak ditemukan atau ID tidak valid", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Pemasok tidak ditemukan atau ID tidak valid", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-}
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

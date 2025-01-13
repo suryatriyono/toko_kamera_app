@@ -1,68 +1,87 @@
+
+-- Tabel Kategori
 CREATE TABLE IF NOT EXISTS kategori (
   id_kategori CHAR(3) NOT NULL PRIMARY KEY,
-  kategori VARCHAR(15) NOT NULL
+  kategori VARCHAR(50) NOT NULL UNIQUE
 );
 
+-- Tabel Pemasok
 CREATE TABLE IF NOT EXISTS pemasok (
     id_pemasok INT AUTO_INCREMENT PRIMARY KEY, 
-    nama_pemasok VARCHAR(50) NOT NULL,
-    alamat VARCHAR(100) DEFAULT NULL,
-    no_hp VARCHAR(13) DEFAULT NULL
+    nama_pemasok VARCHAR(100) NOT NULL,
+    alamat VARCHAR(255) DEFAULT NULL,
+    no_hp VARCHAR(15) DEFAULT NULL,
+    INDEX idx_nama_pemasok (nama_pemasok)
 );
 
+-- Tabel Pelanggan
 CREATE TABLE IF NOT EXISTS pelanggan (
   id_pelanggan INT AUTO_INCREMENT PRIMARY KEY,
-  nama_pelanggan varchar(50) NOT NULL,
-  alamat varchar(100) DEFAULT NULL,
-  no_hp varchar(13) DEFAULT NULL
+  nama_pelanggan VARCHAR(100) NOT NULL,
+  alamat VARCHAR(255) DEFAULT NULL,
+  no_hp VARCHAR(15) DEFAULT NULL,
+  INDEX idx_nama_pelanggan (nama_pelanggan)
 );
 
+-- Tabel Barang
 CREATE TABLE IF NOT EXISTS barang (
     id_barang INT AUTO_INCREMENT PRIMARY KEY,
-    id_kategori CHAR(3),
+    id_kategori CHAR(3) NOT NULL,
     nama_barang VARCHAR(100) NOT NULL,
     deskripsi TEXT,
     harga DECIMAL(15,2) NOT NULL,
-    stok INT NOT NULL,
-    FOREIGN KEY (id_kategori) REFERENCES kategori (id_kategori)
+    stok INT NOT NULL DEFAULT 0,
+    FOREIGN KEY (id_kategori) REFERENCES kategori (id_kategori),
+    INDEX idx_nama_barang (nama_barang),
+    INDEX idx_harga (harga)
 );
 
+-- Tabel Pembelian
 CREATE TABLE IF NOT EXISTS pembelian (
     id_pembelian INT AUTO_INCREMENT PRIMARY KEY,
-    id_pemasok INT,
+    id_pemasok INT NOT NULL,
     tanggal DATE NOT NULL,
     total_harga DECIMAL(15,2) NOT NULL,
-    FOREIGN KEY (id_pemasok) REFERENCES pemasok(id_pemasok) 
+    FOREIGN KEY (id_pemasok) REFERENCES pemasok(id_pemasok),
+    INDEX idx_tanggal (tanggal)
 );
 
+-- Tabel Detail Pembelian
 CREATE TABLE IF NOT EXISTS detail_pembelian (
     id_dpembelian INT AUTO_INCREMENT PRIMARY KEY,
-    id_pembelian INT,
-    id_barang INT,
+    id_pembelian INT NOT NULL,
+    id_barang INT NOT NULL,
     harga DECIMAL(15,2) NOT NULL,
     jumlah INT NOT NULL,
     subtotal DECIMAL(15,2) NOT NULL,
     FOREIGN KEY (id_pembelian) REFERENCES pembelian(id_pembelian),
-    FOREIGN KEY (id_barang) REFERENCES barang(id_barang)
+    FOREIGN KEY (id_barang) REFERENCES barang(id_barang),
+    INDEX idx_id_pembelian (id_pembelian),
+    INDEX idx_id_barang (id_barang)
 );
 
+-- Tabel Penjualan
 CREATE TABLE IF NOT EXISTS penjualan (
   id_penjualan INT AUTO_INCREMENT PRIMARY KEY,
-  id_pelanggan INT,
+  id_pelanggan INT NOT NULL,
   tanggal DATE NOT NULL,
-  total_harga decimal(15,2) NOT NULL,
-  FOREIGN KEY (id_pelanggan) REFERENCES pelanggan(id_pelanggan)
+  total_harga DECIMAL(15,2) NOT NULL,
+  FOREIGN KEY (id_pelanggan) REFERENCES pelanggan(id_pelanggan),
+  INDEX idx_tanggal (tanggal)
 );
 
-
+-- Tabel Detail Penjualan
 CREATE TABLE IF NOT EXISTS detail_penjualan (
   id_dpenjualan INT AUTO_INCREMENT PRIMARY KEY,
-  id_penjualan INT,
-  id_barang INT,
+  id_penjualan INT NOT NULL,
+  id_barang INT NOT NULL,
   harga DECIMAL(15,2) NOT NULL,
   jumlah INT NOT NULL,
-  subtotal DECIMAL(10,0) NOT NULL,
-  FOREIGN KEY (id_penjualan) REFERENCES penjualan(id_penjualan)
+  subtotal DECIMAL(15,2) NOT NULL,
+  FOREIGN KEY (id_penjualan) REFERENCES penjualan(id_penjualan),
+  FOREIGN KEY (id_barang) REFERENCES barang(id_barang),
+  INDEX idx_id_penjualan (id_penjualan),
+  INDEX idx_id_barang (id_barang)
 );
 
 

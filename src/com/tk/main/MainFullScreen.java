@@ -6,6 +6,7 @@ import com.tk.event.EventMenuSelected;
 import com.tk.form.Form_Barang;
 import com.tk.form.Form_Customer;
 import com.tk.form.Form_Dashboard;
+import com.tk.form.Form_Dashboard_n;
 import com.tk.form.Form_Kategori;
 import com.tk.form.Form_Penjualan;
 import com.tk.form.Form_Save_Order;
@@ -37,7 +38,7 @@ public class MainFullScreen extends JFrame {
             public void selected(int index) {
                 System.err.println(index);
                 if (index == 0) {
-                    setForm(new Form_Dashboard());
+                    setForm(new Form_Dashboard_n());
                 } else if (index == 1) {
                     setForm(new Form_Customer());
                 } else if (index == 2) {

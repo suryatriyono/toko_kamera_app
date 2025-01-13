@@ -98,36 +98,6 @@ public class Form_Penjualan extends javax.swing.JPanel {
             public void popupMenuCanceled(PopupMenuEvent e) {
             }
         });
-
-        cbPelanggan.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    String input = cbPelanggan.getEditor().getItem().toString().trim();
-                    if (!input.isEmpty()) {
-                        PelangganModel pelanggan = findPelangganByName(input);
-                        if (pelanggan == null) {
-                            int confirm = JOptionPane.showConfirmDialog(
-                                    Form_Penjualan.this,
-                                    "Pelanggan baru akan dibuat. Lanjutkan?",
-                                    "Konfirmasi",
-                                    JOptionPane.YES_NO_OPTION);
-
-                            if (confirm == JOptionPane.YES_OPTION) {
-                                pelanggan = createNewPelanggan(input);
-                                if (pelanggan != null) {
-                                    listPelanggan.add(pelanggan);
-                                    cbPelanggan.addItem(pelanggan.getNamaPelanggan());
-                                    cbPelanggan.setSelectedItem(pelanggan.getNamaPelanggan());
-                                }
-                            }
-                        } else {
-                            cbPelanggan.setSelectedItem(pelanggan.getNamaPelanggan());
-                        }
-                    }
-                }
-            }
-        });
     }
 
     private PelangganModel findPelangganByName(String name) {
@@ -135,21 +105,6 @@ public class Form_Penjualan extends javax.swing.JPanel {
                 .filter(p -> p.getNamaPelanggan().equalsIgnoreCase(name))
                 .findFirst()
                 .orElse(null);
-    }
-
-    private PelangganModel createNewPelanggan(String namaPelanggan) {
-        // Implementasi dialog untuk input data pelanggan baru
-        String alamat = JOptionPane.showInputDialog("Masukkan alamat pelanggan:");
-        String noHp = JOptionPane.showInputDialog("Masukkan nomor HP pelanggan:");
-
-        if (alamat != null && noHp != null) {
-            PelangganModel newPelanggan = new PelangganModel(0, namaPelanggan, alamat, noHp);
-            // Simpan pelanggan baru ke database
-            if (DatabaseControllers.savePelanggan(newPelanggan)) {
-                return newPelanggan;
-            }
-        }
-        return null;
     }
 
     private void loadPelangganData() {
@@ -294,22 +249,57 @@ public class Form_Penjualan extends javax.swing.JPanel {
 
     private void addBarangToDetail() {
         try {
-            String namaBarang = txtNamaBarang.getText();
-            int jumlah = Integer.parseInt(txtJumlah.getText());
-            double harga = Double.parseDouble(txtHarga.getText().replaceAll("[^\\d.]", ""));
+            String namaBarang = txtNamaBarang.getText().trim();
+            if (namaBarang.isEmpty()) {
+                throw new IllegalArgumentException("Nama barang tidak boleh kosong");
+            }
+
+            String jumlahStr = txtJumlah.getText().trim();
+            if (jumlahStr.isEmpty()) {
+                throw new IllegalArgumentException("Jumlah tidak boleh kosong");
+            }
+            int jumlah = Integer.parseInt(jumlahStr);
+            if (jumlah <= 0) {
+                throw new IllegalArgumentException("Jumlah harus lebih dari 0");
+            }
+
+            // Parse the price from the formatted string
+            String hargaStr = txtHarga.getText().trim();
+            if (hargaStr.isEmpty()) {
+                throw new IllegalArgumentException("Harga tidak valid");
+            }
+
+            // Remove currency symbol and thousand separators, replace comma with dot
+            hargaStr = hargaStr.replaceAll("[Rp.,]", "").replace(",", ".");
+
+            BigDecimal harga = new BigDecimal(hargaStr);
 
             BarangModel barang = DatabaseControllers.getBarangByNama(namaBarang);
-            if (barang != null && jumlah > 0) {
-                DetailPenjualanModel detail = new DetailPenjualanModel(0, barang.getIdBarang(), harga, jumlah);
-                detailPenjualanList.add(detail);
-                refreshTable();
-                clearInputFields();
-                txtNamaBarang.requestFocus();
-            } else {
-                JOptionPane.showMessageDialog(this, "Data barang tidak valid atau jumlah harus lebih dari 0", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            if (barang == null) {
+                throw new IllegalArgumentException("Barang tidak ditemukan");
             }
+
+            // Use the price from the database instead of the displayed price
+            harga = barang.getHarga();
+
+            DetailPenjualanModel detail = new DetailPenjualanModel(0, barang.getIdBarang(), harga, jumlah);
+            detailPenjualanList.add(detail);
+            refreshTable();
+            clearInputFields();
+            txtNamaBarang.requestFocus();
+
+            System.out.println("Barang added: " + namaBarang + ", Harga: " + harga + ", Jumlah: " + jumlah);
+
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Input tidak valid untuk jumlah atau harga", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Input tidak valid untuk jumlah atau harga: " + e.getMessage(), "Peringatan", JOptionPane.WARNING_MESSAGE);
+            System.err.println("NumberFormatException: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Peringatan", JOptionPane.WARNING_MESSAGE);
+            System.err.println("IllegalArgumentException: " + e.getMessage());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Terjadi kesalahan: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.err.println("Unexpected error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -377,9 +367,9 @@ public class Form_Penjualan extends javax.swing.JPanel {
             return;
         }
 
-        double totalHarga = detailPenjualanList.stream()
-                .mapToDouble(DetailPenjualanModel::getSubtotal)
-                .sum();
+        BigDecimal totalHarga = detailPenjualanList.stream()
+                .map(DetailPenjualanModel::getSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         boolean success = DatabaseControllers.savePenjualan(selectedPelanggan.getIdPelanggan(), totalHarga, detailPenjualanList);
 
