@@ -1,5 +1,8 @@
 package com.tk.model;
 
+import java.math.BigDecimal;
+import java.util.Objects;
+
 /**
  *
  * @author STNVC
@@ -65,14 +68,14 @@ public class BarangModel {
     /**
      * @return the harga
      */
-    public double getHarga() {
+    public BigDecimal getHarga() {
         return harga;
     }
 
     /**
      * @param harga the harga to set
      */
-    public void setHarga(double harga) {
+    public void setHarga(BigDecimal harga) {
         this.harga = harga;
     }
 
@@ -89,15 +92,17 @@ public class BarangModel {
     public void setStok(int stok) {
         this.stok = stok;
     }
-
     private int idBarang;
-    private String idKategori;
+    private String idKategori;  // Tetap menggunakan String untuk fleksibilitas
     private String namaBarang;
     private String deskripsi;
-    private double harga;
+    private BigDecimal harga;
     private int stok;
 
-    public BarangModel(int idBarang, String idKategori, String namaBarang, String deskripsi, double harga, int stok) {
+    public BarangModel() {
+    }
+
+    public BarangModel(int idBarang, String idKategori, String namaBarang, String deskripsi, BigDecimal harga, int stok) {
         this.idBarang = idBarang;
         this.idKategori = idKategori;
         this.namaBarang = namaBarang;
@@ -105,6 +110,49 @@ public class BarangModel {
         this.harga = harga;
         this.stok = stok;
     }
-    
-    
+
+    public BarangModel(int idBarang, String namaBarang, String kategori, int stok) {
+        this.idBarang = idBarang;
+        this.namaBarang = namaBarang;
+        this.idKategori = kategori; // Menggunakan idKategori untuk menyimpan nama kategori
+        this.stok = stok;
+        // Inisialisasi field lain dengan nilai default jika diperlukan
+        this.deskripsi = "";
+        this.harga = BigDecimal.ZERO;
+    }
+
+    @Override
+    public String toString() {
+        return "BarangModel{"
+                + "idBarang=" + idBarang
+                + ", idKategori='" + idKategori + '\''
+                + ", namaBarang='" + namaBarang + '\''
+                + ", deskripsi='" + deskripsi + '\''
+                + ", harga=" + harga
+                + ", stok=" + stok
+                + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        BarangModel that = (BarangModel) o;
+        return idBarang == that.idBarang
+                && stok == that.stok
+                && Objects.equals(idKategori, that.idKategori)
+                && Objects.equals(namaBarang, that.namaBarang)
+                && Objects.equals(deskripsi, that.deskripsi)
+                && Objects.equals(harga, that.harga);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idBarang, idKategori, namaBarang, deskripsi, harga, stok);
+    }
+
 }

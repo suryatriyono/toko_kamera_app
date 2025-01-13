@@ -1,10 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.tk.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  *
@@ -13,103 +11,102 @@ import java.util.Date;
 public class PembelianModel {
 
     /**
-     * @return the idDpembelian
-     */
-    public String getIdDpembelian() {
-        return idDpembelian;
-    }
-
-    /**
-     * @param idDpembelian the idDpembelian to set
-     */
-    public void setIdDpembelian(String idDpembelian) {
-        this.idDpembelian = idDpembelian;
-    }
-
-    /**
      * @return the idPembelian
      */
-    public String getIdPembelian() {
+    public int getIdPembelian() {
         return idPembelian;
     }
 
     /**
      * @param idPembelian the idPembelian to set
      */
-    public void setIdPembelian(String idPembelian) {
+    public void setIdPembelian(int idPembelian) {
         this.idPembelian = idPembelian;
     }
 
     /**
-     * @return the idBarang
+     * @return the idPemasok
      */
-    public String getIdBarang() {
-        return idBarang;
+    public int getIdPemasok() {
+        return idPemasok;
     }
 
     /**
-     * @param idBarang the idBarang to set
+     * @param idPemasok the idPemasok to set
      */
-    public void setIdBarang(String idBarang) {
-        this.idBarang = idBarang;
+    public void setIdPemasok(int idPemasok) {
+        this.idPemasok = idPemasok;
     }
 
     /**
-     * @return the harga
+     * @return the tanggal
      */
-    public double getHarga() {
-        return harga;
+    public Date getTanggal() {
+        return tanggal;
     }
 
     /**
-     * @param harga the harga to set
+     * @param tanggal the tanggal to set
      */
-    public void setHarga(double harga) {
-        this.harga = harga;
+    public void setTanggal(Date tanggal) {
+        this.tanggal = tanggal;
     }
 
     /**
-     * @return the jumlah
+     * @return the totalHarga
      */
-    public int getJumlah() {
-        return jumlah;
+    public BigDecimal getTotalHarga() {
+        return totalHarga;
     }
 
     /**
-     * @param jumlah the jumlah to set
+     * @param totalHarga the totalHarga to set
      */
-    public void setJumlah(int jumlah) {
-        this.jumlah = jumlah;
+    public void setTotalHarga(BigDecimal totalHarga) {
+        this.totalHarga = totalHarga;
+    }
+    private int idPembelian;
+    private int idPemasok;
+    private Date tanggal;
+    private BigDecimal totalHarga;
+
+    public PembelianModel() {
     }
 
-    /**
-     * @return the subtotal
-     */
-    public double getSubtotal() {
-        return subtotal;
-    }
-
-    /**
-     * @param subtotal the subtotal to set
-     */
-    public void setSubtotal(double subtotal) {
-        this.subtotal = subtotal;
-    }
-
-    private String idDpembelian;
-    private String idPembelian;
-    private String idBarang;
-    private double harga;
-    private int jumlah;
-    private double subtotal;
-
-    public PembelianModel(String idDpembelian, String idPembelian, String idBarang, double harga, int jumlah, double subtotal) {
-        this.idDpembelian = idDpembelian;
+    public PembelianModel(int idPembelian, int idPemasok, Date tanggal, BigDecimal totalHarga) {
         this.idPembelian = idPembelian;
-        this.idBarang = idBarang;
-        this.harga = harga;
-        this.jumlah = jumlah;
-        this.subtotal = subtotal;
+        this.idPemasok = idPemasok;
+        this.tanggal = tanggal;
+        this.totalHarga = totalHarga;
     }
 
+    @Override
+    public String toString() {
+        return "PembelianModel{"
+                + "idPembelian=" + idPembelian
+                + ", idPemasok=" + idPemasok
+                + ", tanggal=" + tanggal
+                + ", totalHarga=" + totalHarga
+                + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        PembelianModel that = (PembelianModel) o;
+        return idPembelian == that.idPembelian
+                && idPemasok == that.idPemasok
+                && Objects.equals(tanggal, that.tanggal)
+                && Objects.equals(totalHarga, that.totalHarga);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idPembelian, idPemasok, tanggal, totalHarga);
+    }
 }

@@ -1,8 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.tk.model;
+
+import java.util.Objects;
 
 /**
  *
@@ -11,14 +9,14 @@ package com.tk.model;
 public class KategoriModel {
 
     /**
-     * @return the idKetegori
+     * @return the idKategori
      */
     public String getIdKategori() {
         return idKategori;
     }
 
     /**
-     * @param idKetegori the idKetegori to set
+     * @param idKategori the idKategori to set
      */
     public void setIdKategori(String idKategori) {
         this.idKategori = idKategori;
@@ -40,8 +38,37 @@ public class KategoriModel {
     private String idKategori;
     private String kategori;
 
+    public KategoriModel() {
+    }
+
     public KategoriModel(String idKategori, String kategori) {
         this.idKategori = idKategori;
         this.kategori = kategori;
+    }
+
+    @Override
+    public String toString() {
+        return "KategoriModel{"
+                + "idKategori='" + idKategori + '\''
+                + ", kategori='" + kategori + '\''
+                + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        KategoriModel that = (KategoriModel) o;
+        return Objects.equals(idKategori, that.idKategori)
+                && Objects.equals(kategori, that.kategori);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idKategori, kategori);
     }
 }

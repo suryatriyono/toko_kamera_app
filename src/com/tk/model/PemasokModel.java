@@ -1,5 +1,7 @@
 package com.tk.model;
 
+import java.util.Objects;
+
 /**
  *
  * @author STNVC
@@ -66,11 +68,39 @@ public class PemasokModel {
     private String alamat;
     private String noHp;
 
+    public PemasokModel() {
+    }
+
     public PemasokModel(int idPemasok, String namaPemasok, String alamat, String noHp) {
         this.idPemasok = idPemasok;
         this.namaPemasok = namaPemasok;
         this.alamat = alamat;
         this.noHp = noHp;
     }
-  
+    
+    @Override
+    public String toString() {
+        return "PemasokModel{" +
+                "idPemasok=" + idPemasok +
+                ", namaPemasok='" + namaPemasok + '\'' +
+                ", alamat='" + alamat + '\'' +
+                ", noHp='" + noHp + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PemasokModel that = (PemasokModel) o;
+        return idPemasok == that.idPemasok &&
+                Objects.equals(namaPemasok, that.namaPemasok) &&
+                Objects.equals(alamat, that.alamat) &&
+                Objects.equals(noHp, that.noHp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idPemasok, namaPemasok, alamat, noHp);
+    }
 }

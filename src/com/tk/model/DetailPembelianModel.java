@@ -1,5 +1,9 @@
 package com.tk.model;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Objects;
+
 /**
  *
  * @author STNVC
@@ -51,16 +55,16 @@ public class DetailPembelianModel {
     /**
      * @return the harga
      */
-    public double getHarga() {
+    public BigDecimal getHarga() {
         return harga;
     }
 
     /**
      * @param harga the harga to set
      */
-    public void setHarga(double harga) {
+    public void setHarga(BigDecimal harga) {
         this.harga = harga;
-        this.subtotal = harga * jumlah;
+        this.subtotal = calculateSubtotal();
     }
 
     /**
@@ -75,44 +79,90 @@ public class DetailPembelianModel {
      */
     public void setJumlah(int jumlah) {
         this.jumlah = jumlah;
-        this.subtotal = harga * jumlah;
+        this.subtotal = calculateSubtotal();
     }
 
     /**
      * @return the subtotal
      */
-    public double getSubtotal() {
+    public BigDecimal getSubtotal() {
         return subtotal;
     }
 
     /**
      * @param subtotal the subtotal to set
      */
-    public void setSubtotal(double subtotal) {
+    public void setSubtotal(BigDecimal subtotal) {
         this.subtotal = subtotal;
     }
 
     private int idDetailPembelian;
     private int idPembelian;
-    private int  idBarang;
-    private double harga;
+    private int idBarang;
+    private BigDecimal harga;
     private int jumlah;
-    private double subtotal;
-    
-    public DetailPembelianModel(int idBarang, double harga, int jumlah) {
+    private BigDecimal subtotal;
+
+    // Konstruktor tanpa parameter
+    public DetailPembelianModel() {
+    }
+
+    // Konstruktor dengan parameter untuk pembuatan detail baru
+    public DetailPembelianModel(int idBarang, BigDecimal harga, int jumlah) {
         this.idBarang = idBarang;
         this.harga = harga;
         this.jumlah = jumlah;
-        this.subtotal = harga * jumlah;
+        this.subtotal = calculateSubtotal();
     }
 
-    public DetailPembelianModel(int idDetailPembelian, int idPembelian, int idBarang, double harga, int jumlah, double subtotal) {
+    // Konstruktor lengkap
+    public DetailPembelianModel(int idDetailPembelian, int idPembelian, int idBarang, BigDecimal harga, int jumlah) {
         this.idDetailPembelian = idDetailPembelian;
         this.idPembelian = idPembelian;
         this.idBarang = idBarang;
         this.harga = harga;
         this.jumlah = jumlah;
-        this.subtotal = subtotal;
+        this.subtotal = calculateSubtotal();
+    }
+
+    // Private method untuk menghitung subtotal
+    private BigDecimal calculateSubtotal() {
+        return this.harga.multiply(BigDecimal.valueOf(this.jumlah)).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    // Override toString method untuk representasi string yang lebih baik
+    @Override
+    public String toString() {
+        return "DetailPembelianModel{"
+                + "idDetailPembelian=" + idDetailPembelian
+                + ", idPembelian=" + idPembelian
+                + ", idBarang=" + idBarang
+                + ", harga=" + harga
+                + ", jumlah=" + jumlah
+                + ", subtotal=" + subtotal
+                + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DetailPembelianModel that = (DetailPembelianModel) o;
+        return idDetailPembelian == that.idDetailPembelian
+                && idPembelian == that.idPembelian
+                && idBarang == that.idBarang
+                && jumlah == that.jumlah
+                && Objects.equals(harga, that.harga)
+                && Objects.equals(subtotal, that.subtotal);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idDetailPembelian, idPembelian, idBarang, harga, jumlah, subtotal);
     }
 
 }

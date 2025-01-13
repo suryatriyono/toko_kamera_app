@@ -1,8 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.tk.model;
+
+import java.util.Objects;
 
 /**
  *
@@ -70,12 +68,44 @@ public class PelangganModel {
     private String alamat;
     private String noHp;
 
+    public PelangganModel() {
+    }
+
     public PelangganModel(int idPelanggan, String namaPelanggan, String alamat, String noHp) {
         this.idPelanggan = idPelanggan;
         this.namaPelanggan = namaPelanggan;
         this.alamat = alamat;
         this.noHp = noHp;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "PelangganModel{"
+                + "idPelanggan=" + idPelanggan
+                + ", namaPelanggan='" + namaPelanggan + '\''
+                + ", alamat='" + alamat + '\''
+                + ", noHp='" + noHp + '\''
+                + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        PelangganModel that = (PelangganModel) o;
+        return idPelanggan == that.idPelanggan
+                && Objects.equals(namaPelanggan, that.namaPelanggan)
+                && Objects.equals(alamat, that.alamat)
+                && Objects.equals(noHp, that.noHp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idPelanggan, namaPelanggan, alamat, noHp);
+    }
+
 }

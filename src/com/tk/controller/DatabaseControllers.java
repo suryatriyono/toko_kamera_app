@@ -22,6 +22,8 @@ import java.util.ArrayList;
  */
 public class DatabaseControllers {
 
+    private static final int LOW_STOCK_THRESHOLD = 10;
+
     private static Connection getConnection() throws SQLException {
         return DatabaseConfig.getConnection();
     }
@@ -39,7 +41,7 @@ public class DatabaseControllers {
                         rs.getString("id_kategori"),
                         rs.getString("nama_barang"),
                         rs.getString("deskripsi"),
-                        rs.getDouble("harga"),
+                        rs.getBigDecimal("harga"),
                         rs.getInt("stok")
                 );
                 listBarang.add(barang);
@@ -84,7 +86,7 @@ public class DatabaseControllers {
                             rs.getString("nama_barang"),
                             rs.getString("deskripsi"),
                             rs.getString("id_kategori"),
-                            rs.getDouble("harga"),
+                            rs.getBigDecimal("harga"),
                             rs.getInt("stok")
                     );
                 }
@@ -145,13 +147,13 @@ public class DatabaseControllers {
 
             // Insert pembelian
             try (PreparedStatement pstmtPembelian = conn.prepareStatement(sqlPembelian, Statement.RETURN_GENERATED_KEYS)) {
-                double totalHarga = detailPembelianList.stream()
-                        .mapToDouble(detail -> detail.getHarga() * detail.getJumlah())
-                        .sum();
+                BigDecimal totalHarga = detailPembelianList.stream()
+                        .map(DetailPembelianModel::getSubtotal)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
 
                 pstmtPembelian.setInt(1, idPemasok);
                 pstmtPembelian.setDate(2, new java.sql.Date(System.currentTimeMillis()));
-                pstmtPembelian.setDouble(3, totalHarga);
+                pstmtPembelian.setBigDecimal(3, totalHarga);
                 pstmtPembelian.executeUpdate();
 
                 int idPembelian;
@@ -170,9 +172,9 @@ public class DatabaseControllers {
                         // Insert detail pembelian
                         pstmtDetail.setInt(1, idPembelian);
                         pstmtDetail.setInt(2, detail.getIdBarang());
-                        pstmtDetail.setDouble(3, detail.getHarga());
+                        pstmtDetail.setBigDecimal(3, detail.getHarga());
                         pstmtDetail.setInt(4, detail.getJumlah());
-                        pstmtDetail.setDouble(5, detail.getHarga() * detail.getJumlah());
+                        pstmtDetail.setBigDecimal(5, detail.getSubtotal());
                         pstmtDetail.addBatch();
 
                         // Update stok barang
@@ -218,7 +220,7 @@ public class DatabaseControllers {
             pstmt.setString(1, barang.getIdKategori());
             pstmt.setString(2, barang.getNamaBarang());
             pstmt.setString(3, barang.getDeskripsi());
-            pstmt.setDouble(4, barang.getHarga());
+            pstmt.setBigDecimal(4, barang.getHarga());
             pstmt.setInt(5, barang.getStok());
 
             int affectedRows = pstmt.executeUpdate();
@@ -238,7 +240,7 @@ public class DatabaseControllers {
             pstmt.setString(1, barang.getIdKategori());
             pstmt.setString(2, barang.getNamaBarang());
             pstmt.setString(3, barang.getDeskripsi());
-            pstmt.setDouble(4, barang.getHarga());
+            pstmt.setBigDecimal(4, barang.getHarga());
             pstmt.setInt(5, barang.getStok());
             pstmt.setInt(6, barang.getIdBarang());
 
@@ -500,7 +502,7 @@ public class DatabaseControllers {
     }
 
     // ===== Penjualan =====
-    public static boolean savePenjualan(int idPelanggan, double totalHarga, List<DetailPenjualanModel> detailList) {
+    public static boolean savePenjualan(int idPelanggan, BigDecimal totalHarga, List<DetailPenjualanModel> detailList) {
         Connection conn = null;
         try {
             conn = getConnection();
@@ -512,7 +514,7 @@ public class DatabaseControllers {
             try (PreparedStatement pstmt = conn.prepareStatement(sqlPenjualan, Statement.RETURN_GENERATED_KEYS)) {
                 pstmt.setInt(1, idPelanggan);
                 pstmt.setDate(2, new java.sql.Date(System.currentTimeMillis()));
-                pstmt.setBigDecimal(3, BigDecimal.valueOf(totalHarga));
+                pstmt.setBigDecimal(3, totalHarga);
                 pstmt.executeUpdate();
 
                 try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
@@ -560,9 +562,9 @@ public class DatabaseControllers {
             for (DetailPenjualanModel detail : detailList) {
                 pstmt.setInt(1, idPenjualan);
                 pstmt.setInt(2, detail.getIdBarang());
-                pstmt.setBigDecimal(3, BigDecimal.valueOf(detail.getHarga()));
+                pstmt.setBigDecimal(3, detail.getHarga());
                 pstmt.setInt(4, detail.getJumlah());
-                pstmt.setBigDecimal(5, BigDecimal.valueOf(detail.getSubtotal()));
+                pstmt.setBigDecimal(5, detail.getSubtotal());
                 pstmt.addBatch();
             }
             pstmt.executeBatch();
@@ -592,7 +594,7 @@ public class DatabaseControllers {
                             rs.getString("id_kategori"),
                             rs.getString("nama_barang"),
                             rs.getString("deskripsi"),
-                            rs.getBigDecimal("harga").doubleValue(),
+                            rs.getBigDecimal("harga"),
                             rs.getInt("stok")
                     );
                 }
@@ -614,7 +616,7 @@ public class DatabaseControllers {
                             rs.getString("id_kategori"),
                             rs.getString("nama_barang"),
                             rs.getString("deskripsi"),
-                            rs.getBigDecimal("harga").doubleValue(),
+                            rs.getBigDecimal("harga"),
                             rs.getInt("stok")
                     );
                 }
@@ -642,7 +644,7 @@ public class DatabaseControllers {
                             rs.getString("id_kategori"),
                             rs.getString("nama_barang"),
                             rs.getString("deskripsi"),
-                            rs.getDouble("harga"),
+                            rs.getBigDecimal("harga"),
                             rs.getInt("stok")
                     );
                     result.add(barang);
@@ -652,5 +654,100 @@ public class DatabaseControllers {
             System.err.println("Error searching barang: " + e.getMessage());
         }
         return result;
+    }
+
+    // Dashboard
+    public static BigDecimal getTotalSalesToday() {
+        BigDecimal total = BigDecimal.ZERO;
+        String sql = "SELECT SUM(total_harga) AS total FROM penjualan WHERE DATE(tanggal) = CURRENT_DATE";
+
+        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
+
+            if (rs.next()) {
+                total = rs.getBigDecimal("total");
+                if (total == null) {
+                    total = BigDecimal.ZERO;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Mungkin tambahkan logging di sini
+        }
+
+        return total;
+    }
+
+    public static int getProductsSoldToday() {
+        int count = 0;
+        String sql = "SELECT SUM(jumlah) AS total FROM detail_penjualan "
+                + "JOIN penjualan ON detail_penjualan.id_penjualan = penjualan.id_penjualan "
+                + "WHERE DATE(penjualan.tanggal) = CURRENT_DATE";
+
+        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Mungkin tambahkan logging di sini
+        }
+
+        return count;
+    }
+
+    public static int getLowStockProductCount() {
+        int count = 0;
+        String sql = "SELECT COUNT(*) AS count FROM barang WHERE stok < ?";
+
+        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, LOW_STOCK_THRESHOLD);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt("count");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Mungkin tambahkan logging di sini
+        }
+
+        return count;
+    }
+
+    public static List<BarangModel> getTopSellingProducts(int limit) {
+        List<BarangModel> topProducts = new ArrayList<>();
+        String sql = "SELECT b.id_barang, b.nama_barang, k.kategori, b.stok, "
+                + "SUM(dp.jumlah) AS total_terjual "
+                + "FROM barang b "
+                + "JOIN kategori k ON b.id_kategori = k.id_kategori "
+                + "JOIN detail_penjualan dp ON b.id_barang = dp.id_barang "
+                + "JOIN penjualan p ON dp.id_penjualan = p.id_penjualan "
+                + "WHERE p.tanggal >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) "
+                + "GROUP BY b.id_barang "
+                + "ORDER BY total_terjual DESC "
+                + "LIMIT ?";
+
+        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, limit);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    BarangModel barang = new BarangModel(
+                            rs.getInt("id_barang"),
+                            rs.getString("nama_barang"),
+                            rs.getString("kategori"),
+                            rs.getInt("stok")
+                    );
+                    topProducts.add(barang);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Mungkin tambahkan logging di sini
+        }
+
+        return topProducts;
     }
 }

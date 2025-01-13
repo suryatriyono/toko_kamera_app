@@ -11,6 +11,16 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/D:/polnep/semester-3/PemrogramanVisual/toko_kamera/src/com/tk/form/Form_Penjualan.java</file>
+            <file>file:/D:/polnep/semester-3/PemrogramanVisual/toko_kamera/src/com/tk/controller/DatabaseControllers.java</file>
+            <file>file:/D:/polnep/semester-3/PemrogramanVisual/toko_kamera/src/com/tk/model/DetailPenjualanModel.java</file>
+            <file>file:/D:/polnep/semester-3/PemrogramanVisual/toko_kamera/src/com/tk/form/Form_Dashboard_n.java</file>
+            <file>file:/D:/polnep/semester-3/PemrogramanVisual/toko_kamera/src/com/tk/form/Form_Dashboard.java</file>
+            <file>file:/D:/polnep/semester-3/PemrogramanVisual/toko_kamera/src/com/tk/main/MainFullScreen.java</file>
+            <file>file:/D:/polnep/semester-3/PemrogramanVisual/toko_kamera/src/com/tk/form/Form_Save_Order.java</file>
+            <file>file:/D:/polnep/semester-3/PemrogramanVisual/toko_kamera/src/com/tk/model/BarangModel.java</file>
+            <file>file:/D:/polnep/semester-3/PemrogramanVisual/toko_kamera/src/com/tk/form/Form_Barang.java</file>
+        </group>
     </open-files>
 </project-private>

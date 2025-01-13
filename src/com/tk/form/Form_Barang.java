@@ -19,6 +19,7 @@ import java.awt.GridBagLayout;
 
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -246,7 +247,7 @@ public class Form_Barang extends javax.swing.JPanel {
             String idKategori = listKategori.get(selectedIndex).getIdKategori();
             String namaBarang = txtNamaBarang.getText();
             String deskripsi = txtDeskripsi.getText();
-            double harga = Double.parseDouble(txtHarga.getText());
+            BigDecimal harga = new BigDecimal(txtHarga.getText());
             int stok = Integer.parseInt(txtStok.getText());
 
             BarangModel barang = new BarangModel(currentEditingBarangId, idKategori, namaBarang, deskripsi, harga, stok);
@@ -283,20 +284,26 @@ public class Form_Barang extends javax.swing.JPanel {
 
 
     private void deleteBarang(BarangModel barang) {
-        int confirm = JOptionPane.showConfirmDialog(this,
-                "Apakah Anda yakin ingin menghapus barang ini?", "Konfirmasi Hapus",
-                JOptionPane.YES_NO_OPTION);
+    int confirm = JOptionPane.showConfirmDialog(this,
+            "Apakah Anda yakin ingin menghapus barang '" + barang.getNamaBarang() + "'?",
+            "Konfirmasi Hapus",
+            JOptionPane.YES_NO_OPTION);
 
-        if (confirm == JOptionPane.YES_OPTION) {
+    if (confirm == JOptionPane.YES_OPTION) {
+        try {
             boolean success = DatabaseControllers.deleteBarang(barang.getIdBarang());
             if (success) {
-                JOptionPane.showMessageDialog(this, "Barang berhasil dihapus!");
+                JOptionPane.showMessageDialog(this, "Barang '" + barang.getNamaBarang() + "' berhasil dihapus!");
                 loadDataToTable();
             } else {
-                JOptionPane.showMessageDialog(this, "Gagal menghapus barang", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Gagal menghapus barang '" + barang.getNamaBarang() + "'", "Error", JOptionPane.ERROR_MESSAGE);
             }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat menghapus barang: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
     }
+}
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

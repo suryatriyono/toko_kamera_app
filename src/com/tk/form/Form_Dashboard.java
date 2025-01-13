@@ -4,13 +4,20 @@
  */
 package com.tk.form;
 
+import com.tk.controller.DatabaseControllers;
+import com.tk.model.BarangModel;
 import com.tk.model.CardModel;
 import com.tk.model.StatusTypeModel;
 import com.tk.swing.ScrollBar;
 import java.awt.Color;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.List;
+import java.util.Locale;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -18,13 +25,14 @@ import javax.swing.JScrollPane;
  */
 public class Form_Dashboard extends javax.swing.JPanel {
 
-    /**
-     * Creates new form Dashboard_Page
-     */
+    private static final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+    private static final int LOW_STOCK_THRESHOLD = 10;
+
     public Form_Dashboard() {
         initComponents();
         setOpaque(false);
-        card1.setData(new CardModel(new ImageIcon(getClass().getResource("/com/tk/icon/stock.png")),"Stock Total", "200000","Incrase by 60%"));
+        initDashboard();
+        
         // add row 
         spTable.setVerticalScrollBar(new ScrollBar());
         spTable.getVerticalScrollBar().setBackground(Color.WHITE);
@@ -47,6 +55,78 @@ public class Form_Dashboard extends javax.swing.JPanel {
         table.addRow(new Object[]{"Ross Kopelman", "rosskopelman@gmail.com", "Subscriber", "25 Apr,2018", StatusTypeModel.APPROVED});
         table.addRow(new Object[]{"Mike Hussy", "mikehussy@gmail.com", "Admin", "25 Apr,2018", StatusTypeModel.REJECT});
         table.addRow(new Object[]{"Kevin Pietersen", "kevinpietersen@gmail.com", "Admin", "25 Apr,2018", StatusTypeModel.PENDING});
+    }
+
+    private void initDashboard() {
+        // Inisialisasi card
+        card1.setData(new CardModel(new ImageIcon(getClass().getResource("/com/tk/icon/sale.png")), "Total Penjualan Hari Ini", formatCurrency(DatabaseControllers.getTotalSalesToday()), ""));
+        card2.setData(new CardModel(new ImageIcon(getClass().getResource("/com/tk/icon/new-product.png")), "Produk Terjual Hari Ini", String.valueOf(DatabaseControllers.getProductsSoldToday()), ""));
+        card3.setData(new CardModel(new ImageIcon(getClass().getResource("/com/tk/icon/out-of-stock.png")), "Produk Stok Rendah", String.valueOf(DatabaseControllers.getLowStockProductCount()), ""));
+
+        // Setup tabel
+        setupTable();
+        loadTopSellingProducts();
+    }
+
+    private void setupTable() {
+        spTable.setVerticalScrollBar(new ScrollBar());
+        spTable.getVerticalScrollBar().setBackground(Color.WHITE);
+        spTable.getViewport().setBackground(Color.WHITE);
+        JPanel p = new JPanel();
+        p.setBackground(Color.WHITE);
+        spTable.setCorner(JScrollPane.UPPER_RIGHT_CORNER, p);
+        table.setInnerCellStatus(true);
+        table.setColStatus(4);
+
+        // Ubah model tabel
+        table.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{"ID Produk", "Nama Produk", "Kategori", "Stok", "Status"}
+        ) {
+            boolean[] canEdit = new boolean[]{false, false, false, false, false};
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        });
+    }
+
+    private void loadTopSellingProducts() {
+        List<BarangModel> topProducts = DatabaseControllers.getTopSellingProducts(10);
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0);
+
+        for (BarangModel barang : topProducts) {
+            model.addRow(new Object[]{
+                barang.getIdBarang(),
+                barang.getNamaBarang(),
+                barang.getIdKategori(),
+                barang.getStok(),
+                getStockStatus(barang.getStok())
+            });
+        }
+    }
+
+    private StatusTypeModel getStockStatus(int stock) {
+        if (stock > LOW_STOCK_THRESHOLD * 2) {
+            return StatusTypeModel.APPROVED;
+        }
+        if (stock > LOW_STOCK_THRESHOLD) {
+            return StatusTypeModel.PENDING;
+        }
+        return StatusTypeModel.REJECT;
+    }
+
+    private String formatCurrency(BigDecimal amount) {
+        return currencyFormat.format(amount);
+    }
+
+    public void refreshDashboard() {
+//        card1.setData(new CardModel(new ImageIcon(getClass().getResource("/com/tk/icon/stock.png")), "Stock Total", "200000", "Incrase by 60%"));
+//        card1.setData(new CardModel(new ImageIcon(getClass().getResource("/com/tk/icon/sale.png")), "Total Penjualan Hari Ini", formatCurrency(DatabaseControllers.getTotalSalesToday()), ""));
+//        card2.setData(new CardModel(new ImageIcon(getClass().getResource("/com/tk/icon/new-product.png")), "Produk Terjual Hari Ini", String.valueOf(DatabaseControllers.getProductsSoldToday()), ""));
+//        card3.setData(new CardModel(new ImageIcon(getClass().getResource("/com/tk/icon/out-of-stock.png")), "Produk Stok Rendah", String.valueOf(DatabaseControllers.getLowStockProductCount()), ""));
+        loadTopSellingProducts();
     }
 
     /**
@@ -115,8 +195,8 @@ public class Form_Dashboard extends javax.swing.JPanel {
                 .addGap(20, 20, 20)
                 .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spTable, javax.swing.GroupLayout.PREFERRED_SIZE, 1003, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(spTable, javax.swing.GroupLayout.PREFERRED_SIZE, 1357, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         panelBorder1Layout.setVerticalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -135,9 +215,9 @@ public class Form_Dashboard extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(panelBorder1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(16, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelBorder1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
